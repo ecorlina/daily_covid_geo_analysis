@@ -144,7 +144,7 @@ la_county_topomap +
       legend.text.size = 0.6
    )
 
-tmap_save(filename = "./hpi map/hpi_map_pctile.pdf", width = 6.5, height = NA, units = "in")
+tmap_save(filename = paste0(geo_analysis_output_path, "/hpi map/hpi_map_pctile.pdf"), width = 6.5, height = NA, units = "in")
 
 
 la_county_topomap +
@@ -177,4 +177,4 @@ hpi_qt_map <- tm_shape(ct_hpi_map) +
    )
 
 
-tmap_save(filename = "./hpi map/hpi_map_quartile.pdf", width = 6.5, height = NA, units = "in")
+tmap_save(filename = paste0(geo_analysis_output_path, "/hpi map/hpi_map_quartile.pdf"), width = 6.5, height = NA, units = "in")

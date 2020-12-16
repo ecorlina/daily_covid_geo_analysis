@@ -108,7 +108,7 @@ casebars <- ggplot(subset(heatmap, ep_date == max_case_day),
    theme(axis.title.y = element_blank(), axis.line.y = element_blank(), axis.text.y = element_blank(),
          axis.ticks.y = element_blank(), axis.text.x = element_text(colour = "Black"))
 
-png(paste0("./timeline_heatmaps/csa_cases_heatmap-", plot_to, ".png"),
+png(paste0(geo_analysis_output_path, "/timeline_heatmaps/csa_cases_heatmap-", plot_to, ".png"),
     units = "in", width = 16, height = 32, res = 500)
 plot_grid(casetiles, casebars, align = "h", rel_widths = c(1,0.2))
 dev.off()
@@ -191,7 +191,7 @@ casebars <- ggplot(subset(heatmap, ep_date == max_case_day),
    theme(axis.title.y = element_blank(), axis.line.y = element_blank(), axis.text.y = element_blank(),
          axis.ticks.y = element_blank(), axis.text.x = element_text(colour = "Black"))
 
-png(paste0("./timeline_heatmaps/csa_cases_heatmap_windowed-", plot_to_windowed, ".png"),
+png(paste0(geo_analysis_output_path, "/timeline_heatmaps/csa_cases_heatmap_windowed-", plot_to_windowed, ".png"),
     units = "in", width = 16, height = 32, res = 500)
 plot_grid(casetiles, casebars, align = "h", rel_widths = c(1,0.2))
 dev.off()
@@ -251,7 +251,7 @@ casetiles <- ggplot(heatmap_lac,
          axis.text.y=element_text(colour = "Black", size = rel(0.75)),
          plot.title=element_text(size = rel(2.3)))
 
-png(paste0("./timeline_heatmaps/lac_cases_heatmap-", plot_to_lac, ".png"),
+png(paste0(geo_analysis_output_path, "/timeline_heatmaps/lac_cases_heatmap-", plot_to_lac, ".png"),
     units = "in", width = 16, height = 1.75, res = 500)
 plot_grid(casetiles, NULL, align = "h", rel_widths = c(1,0.2))
 dev.off()

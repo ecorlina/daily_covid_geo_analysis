@@ -18,10 +18,10 @@ write_rds(dph_deaths_data, "./data/dph_deaths_data.rds")
 write_rds(dph_rate_data, "./data/dph_rate_data.rds")
 write_rds(dph_deaths_rate_data, "./data/dph_deaths_rate_data.rds")
 
-write_csv(dph_count_data, path = str_c("../other_data/tabulated daily report data/", "dph_covid_counts.csv"))
-write_csv(dph_deaths_data, path = str_c("../other_data/tabulated daily report data/", "dph_covid_deaths.csv"))
-write_csv(dph_rate_data, path = str_c("../other_data/tabulated daily report data/", "dph_covid_count_rates.csv"))
-write_csv(dph_deaths_rate_data, path = str_c("../other_data/tabulated daily report data/", "dph_covid_death_rates.csv"))
+write_csv(dph_count_data, path = str_c(voala_covid_folder_path, "/other_data/tabulated daily report data/", "dph_covid_counts.csv"))
+write_csv(dph_deaths_data, path = str_c(voala_covid_folder_path, "/other_data/tabulated daily report data/", "dph_covid_deaths.csv"))
+write_csv(dph_rate_data, path = str_c(voala_covid_folder_path, "/other_data/tabulated daily report data/", "dph_covid_count_rates.csv"))
+write_csv(dph_deaths_rate_data, path = str_c(voala_covid_folder_path, "/other_data/tabulated daily report data/", "dph_covid_death_rates.csv"))
 
 
 # convert data to long ----
@@ -128,7 +128,7 @@ ggplot(data = long_beach) +
    scale_y_continuous(name = "New cases (calculated from cumulative counts)") +
    labs(title = "Daily new case counts with 7-day moving average, Long Beach")
 
-ggsave(filename = str_c("./output_main/", "long_beach_cases-", today(), ".png"), width = 8, height = 5, units = "in", dpi = 150)
+ggsave(filename = str_c(geo_analysis_output_path, "/output_main/", "long_beach_cases-", today(), ".png"), width = 8, height = 5, units = "in", dpi = 150)
 
 # focus on Pasadena ----
 
@@ -160,7 +160,7 @@ ggplot(data = pasadena) +
    scale_y_continuous(name = "New cases (calculated from cumulative counts)") +
    labs(title = "Daily new case counts with 7-day moving average, Pasadena")
 
-ggsave(filename = str_c("./output_main/", "pasadena_cases-", today(), ".png"), width = 8, height = 5, units = "in", dpi = 150)
+ggsave(filename = str_c(geo_analysis_output_path, "/output_main/", "pasadena_cases-", today(), ".png"), width = 8, height = 5, units = "in", dpi = 150)
 
 
 # FOCUS ON POMONA ----
@@ -193,7 +193,7 @@ ggplot(data = pomona) +
    scale_y_continuous(name = "New cases (calculated from cumulative counts)") +
    labs(title = "Daily new case counts with 7-day moving average, Pomona")
 
-ggsave(filename = str_c("./output_main/", "pomona_cases-", today(), ".png"), width = 8, height = 5, units = "in", dpi = 150)
+ggsave(filename = str_c(geo_analysis_output_path, "/output_main/", "pomona_cases-", today(), ".png"), width = 8, height = 5, units = "in", dpi = 150)
 
 
 # district graph ----
@@ -265,9 +265,9 @@ the_rate_map_binary_dashboard <-
 
 static_rate_map_binary_dashboard <- la_county_topomap + the_rate_map_binary_dashboard + map_styling
 
-tmap_save(static_rate_map_binary_dashboard, filename = str_c(paste0("../daily_voala_dashboard/maps/rates_map-", latest_date,".pdf")), width = 6.5, height = NA, units = "in")
+tmap_save(static_rate_map_binary_dashboard, filename = str_c(paste0(covid_analysis_output_path, "/dashboard_analysis/maps/rates_map-", latest_date,".pdf")), width = 6.5, height = NA, units = "in")
 
-# tmap_save(static_rate_map_binary_dashboard, filename = str_c(paste0("../daily_voala_dashboard/maps/rates_map-", latest_date,".png")), width = 6.5, height = NA, units = "in")
+# tmap_save(static_rate_map_binary_dashboard, filename = str_c(paste0(covid_analysis_output_path, "/dashboard_analysis/maps/rates_map-", latest_date,".png")), width = 6.5, height = NA, units = "in")
 
 
 # smooth gradient case rate heatmap ----
@@ -315,7 +315,7 @@ the_rate_map_binary_dashboard_smooth
 
 static_rate_map_binary_dashboard_smooth <- la_county_topomap + the_rate_map_binary_dashboard_smooth + map_styling
 
-tmap_save(static_rate_map_binary_dashboard_smooth, filename = str_c(paste0("../daily_voala_dashboard/other_maps/rates_map_smooth-", latest_date,".pdf")), width = 6.5, height = NA, units = "in")
+tmap_save(static_rate_map_binary_dashboard_smooth, filename = str_c(paste0(covid_analysis_output_path, "/dashboard_analysis/other_maps/rates_map_smooth-", latest_date,".pdf")), width = 6.5, height = NA, units = "in")
 
 
 # 7-day avg smooth gradient case rate heatmap ----
@@ -329,7 +329,7 @@ data_date_7day_map <- as.character(dph_7day_rate_csa_sd_grp_rank$date[1])
 lac_covid_long_csa_7day = left_join(csa_map_simplified, dph_7day_rate_csa_sd_grp_rank, by = c("label" = "city_community"))
 lac_covid_long_csa_7day <- lac_covid_long_csa_7day %>% filter(!is.na(date))
 
-UPPER_LIMIT_THRESHOLD <- 1000
+UPPER_LIMIT_THRESHOLD <- 1200
 
 lac_covid_long_csa_7day <- lac_covid_long_csa_7day %>%
    mutate(case_7day_rate = ifelse(is.na(case_7day_rate), 0, case_7day_rate)) %>%
@@ -372,7 +372,7 @@ rate_map_7day_smooth <-
 
 static_rate_map_7day_smooth <- la_county_topomap + rate_map_7day_smooth + map_styling
 
-tmap_save(static_rate_map_7day_smooth, filename = str_c(paste0("../daily_voala_dashboard/other_maps/rates_map_7day_smooth-", data_date_7day_map,".pdf")), width = 6.5, height = NA, units = "in")
+tmap_save(static_rate_map_7day_smooth, filename = str_c(paste0(covid_analysis_output_path, "/dashboard_analysis/other_maps/rates_map_7day_smooth-", data_date_7day_map,".pdf")), width = 6.5, height = NA, units = "in")
 
 # interactive
 tmap_leaflet(
@@ -420,7 +420,7 @@ tmap_leaflet(
 
 static_rate_map_7day_smooth_briskin <- la_county_topomap + rate_map_7day_smooth_briskin + map_styling
 
-tmap_save(static_rate_map_7day_smooth_briskin, filename = str_c(paste0("../daily_voala_dashboard/other_maps/rates_map_7day_smooth_briskin-", latest_date,".png")), width = 6.5, height = NA, units = "in")
+tmap_save(static_rate_map_7day_smooth_briskin, filename = str_c(paste0(covid_analysis_output_path, "/dashboard_analysis/other_maps/rates_map_7day_smooth_briskin-", latest_date,".png")), width = 6.5, height = NA, units = "in")
 
 # tmap_save(static_rate_map_7day_smooth_briskin, filename = str_c(paste0("../daily_voala_dashboard/other_maps/rates_map_7day_smooth_briskin-", latest_date,".pdf")), width = 6.5, height = NA, units = "in")
 

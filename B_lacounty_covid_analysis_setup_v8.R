@@ -29,6 +29,12 @@ vlookup <- function(this, data, key, value) {
 }
 
 
+# critical for new workflow: define the output path for all geo_analysis output
+voala_covid_folder_path <- "/Users/rickorlina/Dropbox/Rocinante Research/VOALA MBPro/Covid_19"
+covid_analysis_output_path <- str_c(voala_covid_folder_path, "/covid_analysis_output")
+geo_analysis_output_path <- str_c(covid_analysis_output_path, "/geo_analysis")
+
+
 # import shapefiles and set up maps ----
 
 # LA COUNTY OUTLINE

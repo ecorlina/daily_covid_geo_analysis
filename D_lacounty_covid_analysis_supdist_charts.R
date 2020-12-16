@@ -59,7 +59,7 @@ supdist_case_counts %>% ggplot() +
    theme(legend.title = element_blank(),
          legend.position = "bottom")
 
-ggsave(filename = str_c("./output_main/", "cases_by_district-", today(), ".png"), width = 8, height = 5, units = "in", dpi = 150)
+ggsave(filename = str_c(geo_analysis_output_path, "/output_main/", "cases_by_district-", today(), ".png"), width = 8, height = 5, units = "in", dpi = 150)
 
 supdist_case_counts %>%
    filter(date == as.Date("2020-07-01"))
@@ -150,20 +150,20 @@ ggplot(data = dph_rate_data_csa_sd_grp_rank,
         subtitle = "Grouped by primary Supervisorial District; circle size represents city/community population estimate",
         caption = "(Several small communities with outlier case rates are not shown on this chart.)")
 
-ggsave(filename = str_c("./output_main/", "csa_by_district_cumulative_case_rates-", today(), ".png"), width = 10, height = 5, units = "in", dpi = 150)
+ggsave(filename = str_c(geo_analysis_output_path, "/output_main/", "csa_by_district_cumulative_case_rates-", today(), ".png"), width = 10, height = 5, units = "in", dpi = 150)
 
 
 
 # 7-DAY AVG case rates ----
 
-folders_there <- list.files("../daily_voala_dashboard/data") %>%
+folders_there <- list.files("../daily_covid_dashboard_analysis/data") %>%
    purrr::discard(str_detect(., "readme"))
 
 # USE THE LATEST OR SPECIFY ONE OF THE PAST DOWNLOADS
 datatable_to_use <- last(folders_there)
 # datatable_to_use <- "2020-12-05"
 
-wk_avg_case_rate_csa_all <- readr::read_csv(paste("../daily_voala_dashboard/data", datatable_to_use, "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
+wk_avg_case_rate_csa_all <- readr::read_csv(paste("../daily_covid_dashboard_analysis/data", datatable_to_use, "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
    dplyr::select(ep_date, geo_merge, case_7day_rate) %>%
    mutate(ep_date = as_date(ep_date))
 
@@ -256,21 +256,21 @@ ggplot(data = dph_7day_rate_csa_sd_grp_rank,
         subtitle = "Grouped by primary Supervisorial District; circle size represents city/community population estimate",
         caption = "(Several small communities with outlier case rates are not shown on this chart.)")
 
-ggsave(filename = str_c("./output_main/", "csa_by_district_7dayavg_case_rates-", dph_7day_rate_csa_sd_grp_rank$date[1], ".png"), width = 10, height = 5, units = "in", dpi = 150)
+ggsave(filename = str_c(geo_analysis_output_path, "/output_main/", "csa_by_district_7dayavg_case_rates-", dph_7day_rate_csa_sd_grp_rank$date[1], ".png"), width = 10, height = 5, units = "in", dpi = 150)
 
 
 # change in 7-day average case rates ----
 
 folders_there
 
-case_rate_7day_now <- readr::read_csv(paste("../daily_voala_dashboard/data", folders_there[length(folders_there)], "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
+case_rate_7day_now <- readr::read_csv(paste("../daily_covid_dashboard_analysis/data", folders_there[length(folders_there)], "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
    dplyr::select(ep_date, geo_merge, case_7day_rate) %>%
    mutate(ep_date = as_date(ep_date)) %>%
    dplyr::filter(ep_date == ep_date[1]) %>%
    dplyr::select(city_community = geo_merge,
                  latest_rate = case_7day_rate)
 
-case_rate_7day_weekago <- readr::read_csv(paste("../daily_voala_dashboard/data", folders_there[length(folders_there) - 8], "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
+case_rate_7day_weekago <- readr::read_csv(paste("../daily_covid_dashboard_analysis/data", folders_there[length(folders_there) - 8], "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
    dplyr::select(ep_date, geo_merge, case_7day_rate) %>%
    mutate(ep_date = as_date(ep_date)) %>%
    dplyr::filter(ep_date == ep_date[1]) %>%
