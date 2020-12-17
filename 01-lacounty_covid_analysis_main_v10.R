@@ -1,13 +1,13 @@
 # run the setup code ----
 # only need to do this when starting with an empty environment
 
-# source("02_lacounty_covid_analysis_setup_v8.R")
+# source("02-lacounty_covid_analysis_setup_v8.R")
 
 # run the data import code ----
 # first, double-check that dph_count_data and dph_rate_data are up to date through 'yesterday'
 # this gets run every day to do final prep for map-making
 
-source("03_lacounty_covid_analysis_data_download_v11.R")
+source("03-lacounty_covid_analysis_data_download_v11.R")
 
 test_sum
 
@@ -198,7 +198,7 @@ ggsave(filename = str_c("../covid_analysis_output/geo_analysis_output/output_mai
 
 # district graph ----
 
-source("04_lacounty_covid_analysis_supdist_charts.R")
+source("04-lacounty_covid_analysis_supdist_charts.R")
 
 
 # and finally, make the map ----
