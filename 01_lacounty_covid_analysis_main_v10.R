@@ -18,10 +18,10 @@ write_rds(dph_deaths_data, "./data/dph_deaths_data.rds")
 write_rds(dph_rate_data, "./data/dph_rate_data.rds")
 write_rds(dph_deaths_rate_data, "./data/dph_deaths_rate_data.rds")
 
-write_csv(dph_count_data, path = str_c("../other_data/tabulated daily report data/", "dph_covid_counts.csv"))
-write_csv(dph_deaths_data, path = str_c("../other_data/tabulated daily report data/", "dph_covid_deaths.csv"))
-write_csv(dph_rate_data, path = str_c("../other_data/tabulated daily report data/", "dph_covid_count_rates.csv"))
-write_csv(dph_deaths_rate_data, path = str_c("../other_data/tabulated daily report data/", "dph_covid_death_rates.csv"))
+write_csv(dph_count_data, file = str_c("../other_data/tabulated daily report data/", "dph_covid_counts.csv"))
+write_csv(dph_deaths_data, file = str_c("../other_data/tabulated daily report data/", "dph_covid_deaths.csv"))
+write_csv(dph_rate_data, file = str_c("../other_data/tabulated daily report data/", "dph_covid_count_rates.csv"))
+write_csv(dph_deaths_rate_data, file = str_c("../other_data/tabulated daily report data/", "dph_covid_death_rates.csv"))
 
 
 # convert data to long ----
@@ -198,7 +198,7 @@ ggsave(filename = str_c("../covid_analysis_output/geo_analysis_output/output_mai
 
 # district graph ----
 
-source("D_lacounty_covid_analysis_supdist_charts.R")
+source("04_lacounty_covid_analysis_supdist_charts.R")
 
 
 # and finally, make the map ----
@@ -371,6 +371,8 @@ rate_map_7day_smooth <-
    tm_layout(main.title = str_c("COVID-19 in Los Angeles County (7-day avg), ", data_date_7day_map), main.title.size = 1.1)
 
 static_rate_map_7day_smooth <- la_county_topomap + rate_map_7day_smooth + map_styling
+
+static_rate_map_7day_smooth
 
 tmap_save(static_rate_map_7day_smooth, filename = str_c(paste0("../covid_analysis_output/dashboard_output/other_maps/rates_map_7day_smooth-", data_date_7day_map,".pdf")), width = 6.5, height = NA, units = "in")
 
