@@ -79,9 +79,9 @@ casetiles <- ggplot(heatmap,
    geom_tile(color = "White",
              show.legend = F) +
    theme_classic() +
-   #scale_fill_distiller(palette = "Spectral") +
+   scale_fill_distiller(palette = "Spectral") +
    #scale_fill_viridis_c(option = "C") +
-   scale_fill_YlOrBr() +
+   #scale_fill_YlOrBr() +
    scale_y_discrete(name = "",
                     expand = c(0, 0)) +
    scale_x_date(name = "Date",
@@ -100,15 +100,15 @@ casebars <- ggplot(subset(heatmap, ep_date == max_case_day),
                    aes(x = cases_final, y = fct_reorder(city_community, max_case_day), fill = cases_final)) +
    geom_col(show.legend = F) +
    theme_classic() +
-   #scale_fill_distiller(palette = "Spectral") +
+   scale_fill_distiller(palette = "Spectral") +
    #scale_fill_viridis_c(option = "C") +
-   scale_fill_YlOrBr() +
+   #scale_fill_YlOrBr() +
    scale_x_continuous(name = "Total confirmed cases",
                       breaks=c(0, 2000, 4000, 6000, 8000, 10000)) +
    theme(axis.title.y = element_blank(), axis.line.y = element_blank(), axis.text.y = element_blank(),
          axis.ticks.y = element_blank(), axis.text.x = element_text(colour = "Black"))
 
-png(paste0("../covid_analysis_output/geo_analysis_output/timeline_heatmaps/csa_cases_heatmap-", plot_to, ".png"),
+png(paste0("../covid_analysis_output/geo_analysis_output/timeline_heatmaps/csa_cases_spectral_heatmap-", plot_to, ".png"),
     units = "in", width = 16, height = 32, res = 500)
 plot_grid(casetiles, casebars, align = "h", rel_widths = c(1,0.2))
 dev.off()
