@@ -273,7 +273,7 @@ tmap_save(static_rate_map_binary_dashboard, filename = str_c(paste0("../covid_an
 # smooth gradient case rate heatmap ----
 
 csa_map_counts_limited <- csa_map_counts %>%
-   mutate(rate_limited = case_when(rate > 10000 ~ 10000,
+   mutate(rate_limited = case_when(rate > 12000 ~ 12000,
                                    T ~ rate))
 
 dashboard_basemap_rates_smooth <-
