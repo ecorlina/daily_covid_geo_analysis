@@ -154,7 +154,13 @@ ggsave(filename = str_c("../covid_analysis_output/geo_analysis_output/output_mai
 
 
 
-# 7-DAY AVG case rates ----
+# 7-DAY TOTAL NEW cases rates ----
+
+# I sadly and embarassingly just figured out that the table used for this analysis does NOT report the 7-day average case rate,
+# It reports what it says it reports the 7-day case rate, i.e., the 7-day *total* case rate.
+# Column "cases_7day" gives the total number of cases in a community for the 7-day period ending on a given row's "ep_date".
+# Column "cases_7day_rate" is that total number divded by that community's population times 100k.
+# It's the total case rate for the seven-days ending on that row's ep_date.
 
 folders_there <- list.files("../daily_dashboard/data") %>%
    purrr::discard(str_detect(., "readme"))
@@ -163,16 +169,16 @@ folders_there <- list.files("../daily_dashboard/data") %>%
 datatable_to_use <- last(folders_there)
 # datatable_to_use <- "2020-12-05"
 
-wk_avg_case_rate_csa_all <- readr::read_csv(paste("../daily_dashboard/data", datatable_to_use, "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
+wk_tot_case_rate_csa_all <- readr::read_csv(paste("../daily_dashboard/data", datatable_to_use, "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
    dplyr::select(ep_date, geo_merge, case_7day_rate) %>%
    mutate(ep_date = as_date(ep_date))
 
 
 # USE THE LATEST OR SPECIFY A DATE IN THE PAST
 date_to_plot <- last(folders_there)
-# date_to_plot <- "2020-11-28"
+# date_to_plot <- "2020-12-11"
 
-wk_avg_case_rate_csa <- wk_avg_case_rate_csa_all %>%
+wk_tot_case_rate_csa <- wk_tot_case_rate_csa_all %>%
    dplyr::filter(ep_date == ifelse(ep_date[1] < as_date(date_to_plot), ep_date[1], as_date(date_to_plot))) %>%
    dplyr::select(city_community = geo_merge,
                  date = ep_date,
@@ -180,7 +186,7 @@ wk_avg_case_rate_csa <- wk_avg_case_rate_csa_all %>%
 
 
 
-dph_7day_rate_csa_sd_grp_rank <- wk_avg_case_rate_csa %>%
+dph_7day_rate_csa_sd_grp_rank <- wk_tot_case_rate_csa %>%
    left_join(csa_by_supdist_pops, by = c("city_community" = "label")) %>%
    left_join(supdist_labels, by = c("supdist" = "supdist")) %>%
    dplyr::filter(area_pct > 0.5) %>%
@@ -234,8 +240,8 @@ ggplot(data = dph_7day_rate_csa_sd_grp_rank,
               colour = ifelse(is.na(dph_7day_rate_csa_sd_grp_rank$dotlabel),"White", "Black"),
               alpha = 0.75,
               shape = 21) +
-   scale_y_continuous(name = "Case rate (per 100k residents, 7-day avg, unadjusted)",
-                      limits = c(0, 1200)) +
+   scale_y_continuous(name = "Case rate (per 100k, 7-day total, unadjusted)",
+                      limits = c(0, 1500)) +
    scale_x_continuous(name = "Rank of case rate",
                       labels = NULL,
                       breaks = scales::breaks_extended(n = 4)) +
@@ -256,7 +262,7 @@ ggplot(data = dph_7day_rate_csa_sd_grp_rank,
         subtitle = "Grouped by primary Supervisorial District; circle size represents city/community population estimate",
         caption = "(Several small communities with outlier case rates are not shown on this chart.)")
 
-ggsave(filename = str_c("../covid_analysis_output/geo_analysis_output/output_main/", "csa_by_district_7dayavg_case_rates-", dph_7day_rate_csa_sd_grp_rank$date[1], ".png"), width = 10, height = 5, units = "in", dpi = 150)
+ggsave(filename = str_c("../covid_analysis_output/geo_analysis_output/output_main/", "csa_by_district_7daytot_case_rates-", dph_7day_rate_csa_sd_grp_rank$date[1], ".png"), width = 10, height = 5, units = "in", dpi = 150)
 
 
 # change in 7-day average case rates ----
@@ -281,3 +287,49 @@ case_rate_7day_change = left_join(case_rate_7day_now, case_rate_7day_weekago) %>
    mutate(change_in_past_week = latest_rate - week_prior_rate)
 
 
+# 7-DAY NEW cases ----
+
+folders_there <- list.files("../daily_dashboard/data") %>%
+   purrr::discard(str_detect(., "readme"))
+
+# USE THE LATEST OR SPECIFY ONE OF THE PAST DOWNLOADS
+datatable_to_use <- last(folders_there)
+# datatable_to_use <- "2020-12-05"
+
+wk_tot_cases_csa <- readr::read_csv(paste("../daily_dashboard/data", datatable_to_use, "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
+   dplyr::select(ep_date, geo_merge, cases_7day)
+
+csa_by_supdist <- csa_by_supdist_map_pops %>%
+   st_drop_geometry() %>%
+   dplyr::select(label, supdist, area_pct, population)
+
+supdist_pops <- csa_by_supdist %>%
+   mutate(population_allocated = population * area_pct) %>%
+   group_by(supdist) %>%
+   summarize(population_supdist = sum(population_allocated, na.rm = T))
+
+wk_rate_cases_csa <- left_join(wk_tot_cases_csa, csa_by_supdist, by = c("geo_merge" = "label")) %>%
+   dplyr::filter(geo_merge != "Los Angeles County") %>%
+   mutate(cases_7day_allocated = cases_7day * area_pct) %>%
+   group_by(ep_date, supdist) %>%
+   summarize(cases_7day_supdist = sum(cases_7day_allocated)) %>%
+   left_join(supdist_pops) %>%
+   mutate(cases_7day_rate_supdist = cases_7day_supdist * 100000 / population_supdist) %>%
+   left_join(supdist_labels)
+
+# USE THE LATEST OR SPECIFY A DATE IN THE PAST
+# date_to_plot <- last(folders_there))
+date_to_plot <- max(wk_rate_cases_csa$ep_date) - 3
+
+wk_rate_cases_csa %>%
+   dplyr::filter(ep_date <= date_to_plot) %>%
+   ggplot() +
+   geom_line(mapping = aes(x = ep_date, y = cases_7day_rate_supdist, color = supdistlabel)) +
+   scale_color_muted() +
+   scale_x_date(name = "Date", date_breaks = "4 weeks", date_labels = "%m-%d") +
+   scale_y_continuous(name = "Confirmed case rate 7-day avg (per 100,000") +
+   labs(title = "Confirmed Covid-19 Cases, 7-day average") +
+   theme(legend.title = element_blank(),
+         legend.position = "bottom")
+
+ggsave(filename = str_c("../covid_analysis_output/geo_analysis_output/output_main/", "case_rate_history_by_district-", today(), ".png"), width = 8, height = 5, units = "in", dpi = 150)

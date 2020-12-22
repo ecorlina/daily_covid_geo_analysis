@@ -27,7 +27,7 @@ library(busdater)
 library(khroma)
 
 
-# import 7-DAY AVG case rates data as if it's not already done ----
+# import 7-DAY case rates data as if it's not already done ----
 
 data_folders_there <- list.files("../daily_dashboard/data") %>%
    purrr::discard(str_detect(., "readme"))
@@ -37,7 +37,7 @@ data_folders_there <- list.files("../daily_dashboard/data") %>%
 date_to_plot <- last(data_folders_there)
 # date_to_plot <- "2020-11-21"
 
-wk_avg_case_rate_csa <- readr::read_csv(paste("../daily_dashboard/data", date_to_plot, "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
+wk_tot_case_rate_csa <- readr::read_csv(paste("../daily_dashboard/data", date_to_plot, "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
    dplyr::select(ep_date, geo_merge, cases_7day, case_7day_rate, adj_case_7day_rate) %>%
    mutate(ep_date = as_date(ep_date)) %>%
    dplyr::select(city_community = geo_merge,
@@ -45,9 +45,9 @@ wk_avg_case_rate_csa <- readr::read_csv(paste("../daily_dashboard/data", date_to
    dplyr::filter(!is.na(ep_date),
                  city_community != "Los Angeles County")
 
-wk_avg_case_rate_csa$city_community <- as_factor(wk_avg_case_rate_csa$city_community)
+wk_tot_case_rate_csa$city_community <- as_factor(wk_tot_case_rate_csa$city_community)
 
-wk_avg_case_rate_csa <- wk_avg_case_rate_csa %>% complete(city_community, ep_date, fill = list(cases_7day = 0, case_7day_rate = 0, adj_case_7day_rate = 0))
+wk_tot_case_rate_csa <- wk_tot_case_rate_csa %>% complete(city_community, ep_date, fill = list(cases_7day = 0, case_7day_rate = 0, adj_case_7day_rate = 0))
 
 cumulative_case_rate_csa <- readr::read_csv(paste("../daily_dashboard/data", date_to_plot, "LA_County_Covid19_CSA_case_death_table.csv", sep = "/")) %>%
    dplyr::select(geo_merge, cases_final, case_rate_final, adj_case_rate_final) %>%
@@ -56,9 +56,16 @@ cumulative_case_rate_csa <- readr::read_csv(paste("../daily_dashboard/data", dat
 
 cumulative_case_rate_csa$city_community <- as_factor(cumulative_case_rate_csa$city_community)
 
-wk_avg_case_rate_csa <- left_join(wk_avg_case_rate_csa, cumulative_case_rate_csa, by = c("city_community" = "city_community"))
+wk_tot_case_rate_csa <- left_join(wk_tot_case_rate_csa, cumulative_case_rate_csa, by = c("city_community" = "city_community"))
 
-heatmap <- wk_avg_case_rate_csa %>%
+csa_by_supdist_1to1 <- csa_by_supdist_pops %>%
+   dplyr::select(label, supdist, area_pct) %>%
+   arrange(label, desc(area_pct)) %>%
+   distinct(label, .keep_all = T)
+
+wk_tot_case_rate_csa <- left_join(wk_tot_case_rate_csa, csa_by_supdist_1to1, by = c("city_community" = "label"))
+
+heatmap <- wk_tot_case_rate_csa %>%
    #dplyr::select(city_community, ep_date, case_7day_rate) %>%
    group_by(city_community) %>%
    mutate(max_case_rate = max(case_7day_rate),
@@ -88,7 +95,7 @@ casetiles <- ggplot(heatmap,
                 limits = as.Date(c(plot_from, plot_to)),
                 expand = c(0, 0)) +
    labs(title="Timelines for COVID-19 cases in Los Angeles Countywide Statistical Areas",
-        subtitle=paste0("The heatmap represents the 7-day rolling average of the number of new confirmed cases, normalized to the maximum value within the CSA.\nCSAs are ordered by the date at which they reached their peak number of new cases. Bars on the right represent the absolute number of cases in each CSA.\nData updated to ", plot_to, ". Data for most recent days is provisional and may be revised upwards as additional tests are processed."),
+        subtitle=paste0("The heatmap represents the 7-day total new confirmed case rate, normalized to the maximum value within the CSA.\nCSAs are ordered by the date at which they reached their peak number of new cases. Bars on the right represent the absolute number of cases in each CSA.\nData updated to ", plot_to, ". Data for most recent days is provisional and may be revised upwards as additional tests are processed."),
         caption="Data from LA County Department of Public Health | Plot inspired by @VictimOfMaths") +
    theme(axis.line.y=element_blank(),
          plot.subtitle=element_text(size = rel(0.78)),
@@ -123,7 +130,7 @@ date_to_plot <- last(data_folders_there)  # this determines the folder from whic
 plot_from <- "2020-03-01"
 plot_to_windowed <- "2020-12-02"
 
-wk_avg_case_rate_csa <- readr::read_csv(paste("../daily_dashboard/data", date_to_plot, "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
+wk_tot_case_rate_csa <- readr::read_csv(paste("../daily_dashboard/data", date_to_plot, "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
    dplyr::select(ep_date, geo_merge, cases_7day, case_7day_rate, adj_case_7day_rate) %>%
    mutate(ep_date = as_date(ep_date)) %>%
    dplyr::select(city_community = geo_merge,
@@ -132,9 +139,9 @@ wk_avg_case_rate_csa <- readr::read_csv(paste("../daily_dashboard/data", date_to
                  city_community != "Los Angeles County") %>%
    dplyr::filter(ep_date <= as_date(plot_to_windowed))
 
-wk_avg_case_rate_csa$city_community <- as_factor(wk_avg_case_rate_csa$city_community)
+wk_tot_case_rate_csa$city_community <- as_factor(wk_tot_case_rate_csa$city_community)
 
-wk_avg_case_rate_csa <- wk_avg_case_rate_csa %>% complete(city_community, ep_date, fill = list(cases_7day = 0, case_7day_rate = 0, adj_case_7day_rate = 0))
+wk_tot_case_rate_csa <- wk_tot_case_rate_csa %>% complete(city_community, ep_date, fill = list(cases_7day = 0, case_7day_rate = 0, adj_case_7day_rate = 0))
 
 cumulative_case_rate_csa <- readr::read_csv(paste("../daily_dashboard/data", plot_to_windowed, "LA_County_Covid19_CSA_case_death_table.csv", sep = "/")) %>%
    dplyr::select(geo_merge, cases_final, case_rate_final, adj_case_rate_final) %>%
@@ -143,9 +150,9 @@ cumulative_case_rate_csa <- readr::read_csv(paste("../daily_dashboard/data", plo
 
 cumulative_case_rate_csa$city_community <- as_factor(cumulative_case_rate_csa$city_community)
 
-wk_avg_case_rate_csa <- left_join(wk_avg_case_rate_csa, cumulative_case_rate_csa, by = c("city_community" = "city_community"))
+wk_tot_case_rate_csa <- left_join(wk_tot_case_rate_csa, cumulative_case_rate_csa, by = c("city_community" = "city_community"))
 
-heatmap <- wk_avg_case_rate_csa %>%
+heatmap <- wk_tot_case_rate_csa %>%
    #dplyr::select(city_community, ep_date, case_7day_rate) %>%
    group_by(city_community) %>%
    mutate(max_case_rate = max(case_7day_rate),
@@ -209,16 +216,16 @@ lacounty_population_est <- 10257557
 date_to_plot <- last(data_folders_there)
 # date_to_plot <- "2020-11-21"
 
-wk_avg_case_rate_lac <- readr::read_csv(paste("../daily_dashboard/data", date_to_plot, "LA_County_Covid19_cases_deaths_date_table.csv", sep = "/")) %>%
+wk_tot_case_rate_lac <- readr::read_csv(paste("../daily_dashboard/data", date_to_plot, "LA_County_Covid19_cases_deaths_date_table.csv", sep = "/")) %>%
    dplyr::select(date_use, total_cases, new_case, avg_cases) %>%
    mutate(date_use = as_date(date_use)) %>%
    dplyr::filter(!is.na(date_use))
 
 
-wk_avg_case_rate_lac <- wk_avg_case_rate_lac %>%
+wk_tot_case_rate_lac <- wk_tot_case_rate_lac %>%
    mutate(case_7day_rate = 100000 * (avg_cases / lacounty_population_est))
 
-heatmap_lac <- wk_avg_case_rate_lac %>%
+heatmap_lac <- wk_tot_case_rate_lac %>%
    mutate(max_case_rate = max(case_7day_rate, na.rm = T),
           max_case_day = date_use[which(case_7day_rate == max_case_rate)][1])
 
