@@ -273,7 +273,7 @@ tmap_save(static_rate_map_binary_dashboard, filename = str_c(paste0("../covid_an
 # smooth gradient case rate heatmap ----
 
 csa_map_counts_limited <- csa_map_counts %>%
-   mutate(rate_limited = case_when(rate > 12000 ~ 12000,
+   mutate(rate_limited = case_when(rate > 15000 ~ 15000,
                                    T ~ rate))
 
 dashboard_basemap_rates_smooth <-
@@ -329,7 +329,7 @@ data_date_7day_map <- as.character(dph_7day_rate_csa_sd_grp_rank$date[1])
 lac_covid_long_csa_7day = left_join(csa_map_simplified, dph_7day_rate_csa_sd_grp_rank, by = c("label" = "city_community"))
 lac_covid_long_csa_7day <- lac_covid_long_csa_7day %>% filter(!is.na(date))
 
-UPPER_LIMIT_THRESHOLD <- 1200
+UPPER_LIMIT_THRESHOLD <- 1500
 
 lac_covid_long_csa_7day <- lac_covid_long_csa_7day %>%
    mutate(case_7day_rate = ifelse(is.na(case_7day_rate), 0, case_7day_rate)) %>%

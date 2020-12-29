@@ -129,7 +129,7 @@ ggplot(data = dph_rate_data_csa_sd_grp_rank,
               alpha = 0.75,
               shape = 21) +
    scale_y_continuous(name = "Case rate (per 100k residents, cumulative, unadjusted)",
-                      limits = c(0, 12000)) +
+                      limits = c(0, 15000)) +
    scale_x_continuous(name = "Rank of case rate",
                       labels = NULL,
                       breaks = scales::breaks_extended(n = 4)) +

@@ -1,26 +1,26 @@
 dph_count_data <- dph_count_data %>%
-   mutate(`2020-11-27` = round(rowMeans(cbind(dph_count_data$`2020-11-26`, dph_count_data$`2020-11-28`)))) %>%
+   mutate(`2020-12-25` = round(rowMeans(cbind(dph_count_data$`2020-12-24`, dph_count_data$`2020-12-26`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
    
 
 
 dph_deaths_data <- dph_deaths_data %>%
-   mutate(`2020-11-27` = round(rowMeans(cbind(dph_deaths_data$`2020-11-26`, dph_deaths_data$`2020-11-28`)))) %>%
+   mutate(`2020-12-25` = round(rowMeans(cbind(dph_deaths_data$`2020-12-24`, dph_deaths_data$`2020-12-26`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
    
 
 
 dph_rate_data <- dph_rate_data %>%
-   mutate(`2020-11-27` = round(rowMeans(cbind(dph_rate_data$`2020-11-26`, dph_rate_data$`2020-11-28`)))) %>%
+   mutate(`2020-12-25` = round(rowMeans(cbind(dph_rate_data$`2020-12-24`, dph_rate_data$`2020-12-26`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
    
 
 
 dph_deaths_rate_data <- dph_deaths_rate_data %>%
-   mutate(`2020-11-27` = round(rowMeans(cbind(dph_deaths_rate_data$`2020-11-26`, dph_deaths_rate_data$`2020-11-28`)))) %>%
+   mutate(`2020-12-25` = round(rowMeans(cbind(dph_deaths_rate_data$`2020-12-24`, dph_deaths_rate_data$`2020-12-26`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
    
