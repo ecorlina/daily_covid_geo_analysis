@@ -273,7 +273,7 @@ tmap_save(static_rate_map_binary_dashboard, filename = str_c(paste0("../covid_an
 # smooth gradient case rate heatmap ----
 
 csa_map_counts_limited <- csa_map_counts %>%
-   mutate(rate_limited = case_when(rate > 15000 ~ 15000,
+   mutate(rate_limited = case_when(rate > 20000 ~ 20000,
                                    T ~ rate))
 
 dashboard_basemap_rates_smooth <-
@@ -318,7 +318,7 @@ static_rate_map_binary_dashboard_smooth <- la_county_topomap + the_rate_map_bina
 tmap_save(static_rate_map_binary_dashboard_smooth, filename = str_c(paste0("../covid_analysis_output/dashboard_output/other_maps/rates_map_smooth-", latest_date,".pdf")), width = 6.5, height = NA, units = "in")
 
 
-# 7-day avg smooth gradient case rate heatmap ----
+# 7-day total smooth gradient case rate heatmap ----
 
 # REQUIRES that lacounty_supdist_charts.R has already been run!!
 
@@ -340,8 +340,8 @@ dashboard_basemap_rates_7day_smooth <-
    tm_fill(col = "case_7day_rate",
            style = "cont",
            id = "label",
-           title = "Case Rate (per 100k) 7-day Average",
-           group = str_c("COVID-19 7-day avg case rate, ", latest_date)) +
+           title = "7-day Case Rate (per 100k)",
+           group = str_c("COVID-19 7-day case rate, ", latest_date)) +
    tm_borders(lwd = 0.2)
 
 rate_map_7day_smooth <-
@@ -368,7 +368,7 @@ rate_map_7day_smooth <-
       id = "ProgramNameFormatted",
       popup.vars = c("BudgetCat", "ProgramName", "StandardizedAddress"),
       group = "Residential and shelter (pink)") +
-   tm_layout(main.title = str_c("COVID-19 in Los Angeles County (7-day avg), ", data_date_7day_map), main.title.size = 1.1)
+   tm_layout(main.title = str_c("COVID-19 in Los Angeles County (7-day total), ", data_date_7day_map), main.title.size = 1.1)
 
 static_rate_map_7day_smooth <- la_county_topomap + rate_map_7day_smooth + map_styling
 
@@ -397,7 +397,7 @@ briskin_location <- st_as_sf(briskin, coords = c("longitude", "latitude"), crs =
    st_transform(6423)
 st_crs(briskin_location)
 
-rate_map_7day_smooth_briskin <-
+rate_map_smooth_briskin <-
    tm_shape(lacounty_mainland) +
    tm_borders(group = "LA County border") +
    dashboard_basemap_rates_smooth +
@@ -415,10 +415,26 @@ rate_map_7day_smooth_briskin <-
 
 # interactive
 tmap_leaflet(
-   rate_map_7day_smooth_briskin,
+   rate_map_smooth_briskin,
    mode = "view"
 ) %>%
    leaflet::hideGroup(str_c("COVID-19 cumulative case rate, ", latest_date))
+
+
+rate_map_7day_smooth_briskin <-
+   tm_shape(lacounty_mainland) +
+   tm_borders(group = "LA County border") +
+   dashboard_basemap_rates_7day_smooth +
+   tm_shape(briskin_location) + 
+   tm_symbols(
+      size = 0.1, shape.showNA = F,
+      col = "#000099",
+      alpha = 0.75,
+      border.lwd = 0.5, border.col = "black", border.alpha = 0.5,
+      id = "site",
+      popup.vars = c("site", "address_given"),
+      group = "Briskin Elementary School") +
+   tm_layout(main.title = str_c("COVID-19 in Los Angeles County, ", today()), main.title.size = 1.1)
 
 static_rate_map_7day_smooth_briskin <- la_county_topomap + rate_map_7day_smooth_briskin + map_styling
 
@@ -428,7 +444,7 @@ tmap_save(static_rate_map_7day_smooth_briskin, filename = str_c(paste0("../covid
 
 
 
-# change in 7-day average case rate between latest and previous updates ----
+# change in 7-day case rate between latest and previous updates ----
 
 lac_covid_long_csa_7day_change = left_join(csa_map_simplified, case_rate_7day_change, by = c("label" = "city_community"))
 
@@ -448,7 +464,7 @@ dashboard_basemap_rates_7day_change_smooth <-
            style = "cont",
            id = "label",
            title = "Case Rate (per 100k)",
-           group = str_c("COVID-19 7-day avg case rate, ", latest_date)) +
+           group = str_c("COVID-19 7-day case rate, ", latest_date)) +
    tm_borders(lwd = 0.2)
 
 rate_map_7day_change_smooth <-
@@ -475,7 +491,7 @@ rate_map_7day_change_smooth <-
       id = "ProgramNameFormatted",
       popup.vars = c("BudgetCat", "ProgramName", "StandardizedAddress"),
       group = "Residential and shelter (pink)") +
-   tm_layout(main.title = str_c("COVID-19 in LA County (change in 7-day avg over past week), ", today()), main.title.size = 1.1)
+   tm_layout(main.title = str_c("COVID-19 in LA County (change in 7-day rate over past week), ", today()), main.title.size = 1.1)
 
 static_rate_map_7day_change_smooth <- la_county_topomap + rate_map_7day_change_smooth + map_styling
 static_rate_map_7day_change_smooth

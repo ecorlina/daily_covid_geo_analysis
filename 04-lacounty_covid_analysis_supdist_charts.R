@@ -31,7 +31,7 @@ vars <- vars[ vars != "population" ]
 
 
 dph_count_data_by_supdist <- dph_count_data_by_csa_supdist %>%
-   mutate_at(.vars = vars(starts_with("2020-")),
+   mutate_at(.vars = vars(!c(city_community,supdist:split_pop)),
           .funs = list(~ (. * area_pct))) %>%
    dplyr::select(-area_pct, -population) %>%
    group_by(supdist) %>%
@@ -265,7 +265,7 @@ ggplot(data = dph_7day_rate_csa_sd_grp_rank,
 ggsave(filename = str_c("../covid_analysis_output/geo_analysis_output/output_main/", "csa_by_district_7daytot_case_rates-", dph_7day_rate_csa_sd_grp_rank$date[1], ".png"), width = 10, height = 5, units = "in", dpi = 150)
 
 
-# change in 7-day average case rates ----
+# change in 7-day case rates ----
 
 folders_there
 
@@ -327,8 +327,8 @@ wk_rate_cases_csa %>%
    geom_line(mapping = aes(x = ep_date, y = cases_7day_rate_supdist, color = supdistlabel)) +
    scale_color_muted() +
    scale_x_date(name = "Date", date_breaks = "4 weeks", date_labels = "%m-%d") +
-   scale_y_continuous(name = "Confirmed case rate 7-day avg (per 100,000") +
-   labs(title = "Confirmed Covid-19 Cases, 7-day average") +
+   scale_y_continuous(name = "Confirmed 7-day case rate (per 100,000") +
+   labs(title = "Confirmed Covid-19 Cases, 7-day rate") +
    theme(legend.title = element_blank(),
          legend.position = "bottom")
 
