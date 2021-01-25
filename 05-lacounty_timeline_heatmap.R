@@ -128,7 +128,7 @@ dev.off()
 
 date_to_plot <- last(data_folders_there)  # this determines the folder from which the data table is loaded
 plot_from <- "2020-03-01"
-plot_to_windowed <- "2020-12-02"
+plot_to_windowed <- "2020-10-28"
 
 wk_tot_case_rate_csa <- readr::read_csv(paste("../daily_dashboard/data", date_to_plot, "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
    dplyr::select(ep_date, geo_merge, cases_7day, case_7day_rate, adj_case_7day_rate) %>%
@@ -169,9 +169,9 @@ casetiles <- ggplot(heatmap,
    geom_tile(color = "White",
              show.legend = F) +
    theme_classic() +
-   #scale_fill_distiller(palette = "Spectral") +
+   scale_fill_distiller(palette = "Spectral") +
    #scale_fill_viridis_c(option = "C") +
-   scale_fill_YlOrBr() +
+   #scale_fill_YlOrBr() +
    scale_y_discrete(name = "",
                     expand = c(0, 0)) +
    scale_x_date(name = "Date",

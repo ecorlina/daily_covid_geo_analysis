@@ -164,18 +164,35 @@ setdiff(csa_map$label, csa_map_simplified$label)
 # grab VOALA program data from previous work ----
 
 # 3. Import VOALA programs data file
-voala_programs <- read_csv("~/Dropbox/Rocinante Research/VOALA MBPro/Mapping/VOALA programs 2019/VOALA_Program_analysisTable-20200406.csv", col_types = "fffiffcccdfdccddcf")
+
+#voala_programs <- read_csv("~/Dropbox/Rocinante Research/VOALA MBPro/Mapping/VOALA programs/VOALA programs 2019/VOALA_Program_analysisTable-20200406.csv", col_types = "fffiffcccdfdccddcf")
+
+# REPLACING PROGRAM INFO WITH NEW LIST
+# Note that some columns are missing compared to the previous list, so additional lines below are commented out.
+voala_programs <- read_csv("~/Dropbox/Rocinante Research/VOALA MBPro/Mapping/VOALA programs/VOALA programs lists/20201231 list from SMH/Program Numbers List 12-31-20 with geocoding.csv", skip = 1, col_types = "ccfcccccfddccffc")
 
 # voala_programs <- voala_programs %>% mutate(FundSource = ifelse(FederalState == 1, "FederalState", "Local"))
 
-# reorder BudgetCat factor levels to something intentional
-voala_programs <- voala_programs %>% mutate(BudgetCat = BudgetCat %>% fct_infreq())
-
 # clean up the Director Name entries if it hasn't already been done
-voala_programs$DirectorALT <- voala_programs$DirectorName %>% str_replace("\\s\\(.+\\)$", "")
+# voala_programs$DirectorALT <- voala_programs$DirectorName %>% str_replace("\\s\\(.+\\)$", "")
+
+#voala_programs_subset <- voala_programs %>%
+#   dplyr::select(-FederalState, -Local, -FundSource, -Budget, -Bacon, -Rate, -DirectorName)
 
 voala_programs_subset <- voala_programs %>%
-   dplyr::select(-FederalState, -Local, -FundSource, -Budget, -Bacon, -Rate, -DirectorName)
+   dplyr::select(BudgetCat = category,
+                 MapLocalized = map_yn,
+                 Number,
+                 ProgramName = `Program Name`,
+                 ProgramNameFormatted = program_name_formatted,
+                 `Manager Name`,
+                 Latitude = latitude,
+                 Longitude = longitude,
+                 StandardizedAddress = standardized_address,
+                 ResidentialShelter = res_shelter_yn)
+
+# reorder BudgetCat factor levels to something intentional
+voala_programs_subset <- voala_programs_subset %>% mutate(BudgetCat = BudgetCat %>% fct_infreq())
 
 # drop entries with no physical address
 voala_programs_filtered <- voala_programs_subset %>%
