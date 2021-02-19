@@ -262,15 +262,15 @@ dph_deaths_rate_data <- dph_deaths_rate_data %>%
 
 
 dph_count_data <- dph_count_data %>%
-   rename(`2020-11-17` = `2020-11-18`)
+   rename(`2021-02-17` = `2021-02-18`)
 
 dph_rate_data <- dph_rate_data %>%
-   rename(`2020-11-17` = `2020-11-18`)
+   rename(`2021-02-17` = `2021-02-18`)
 
 dph_deaths_data <- dph_deaths_data %>%
-   rename(`2020-11-17` = `2020-11-18`)
+   rename(`2021-02-17` = `2021-02-18`)
 
 dph_deaths_rate_data <- dph_deaths_rate_data %>%
-   rename(`2020-11-17` = `2020-11-18`)
+   rename(`2021-02-17` = `2021-02-18`)
 
 

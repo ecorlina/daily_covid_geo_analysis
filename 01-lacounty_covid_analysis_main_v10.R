@@ -329,7 +329,9 @@ data_date_7day_map <- as.character(dph_7day_rate_csa_sd_grp_rank$date[1])
 lac_covid_long_csa_7day = left_join(csa_map_simplified, dph_7day_rate_csa_sd_grp_rank, by = c("label" = "city_community"))
 lac_covid_long_csa_7day <- lac_covid_long_csa_7day %>% filter(!is.na(date))
 
-UPPER_LIMIT_THRESHOLD <- 1500
+# UPPER_LIMIT_THRESHOLD reduced from 1500 to 1000 on 2020-02-02 to reflect lower case rates countywide
+# UPPER_LIMIT_THRESHOLD reduced from 1000 to 350 on 2020-02-16 to reflect lower case rates countywide
+UPPER_LIMIT_THRESHOLD <- 350
 
 lac_covid_long_csa_7day <- lac_covid_long_csa_7day %>%
    mutate(case_7day_rate = ifelse(is.na(case_7day_rate), 0, case_7day_rate)) %>%
