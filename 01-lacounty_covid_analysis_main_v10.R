@@ -331,7 +331,7 @@ lac_covid_long_csa_7day <- lac_covid_long_csa_7day %>% filter(!is.na(date))
 
 # UPPER_LIMIT_THRESHOLD reduced from 1500 to 1000 on 2020-02-02 to reflect lower case rates countywide
 # UPPER_LIMIT_THRESHOLD reduced from 1000 to 350 on 2020-02-16 to reflect lower case rates countywide
-UPPER_LIMIT_THRESHOLD <- 350
+UPPER_LIMIT_THRESHOLD <- 125
 
 lac_covid_long_csa_7day <- lac_covid_long_csa_7day %>%
    mutate(case_7day_rate = ifelse(is.na(case_7day_rate), 0, case_7day_rate)) %>%
@@ -466,7 +466,7 @@ dashboard_basemap_rates_7day_change_smooth <-
            style = "cont",
            id = "label",
            title = "Case Rate (per 100k)",
-           group = str_c("COVID-19 7-day case rate, ", latest_date)) +
+           group = str_c("COVID-19 7-day case rate change, ", latest_date)) +
    tm_borders(lwd = 0.2)
 
 rate_map_7day_change_smooth <-

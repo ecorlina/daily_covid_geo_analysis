@@ -1,26 +1,26 @@
 dph_count_data <- dph_count_data %>%
-   mutate(`2020-12-25` = round(rowMeans(cbind(dph_count_data$`2020-12-24`, dph_count_data$`2020-12-26`)))) %>%
+   mutate(`2021-02-22` = round(rowMeans(cbind(dph_count_data$`2021-02-21`, dph_count_data$`2021-02-23`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
    
 
 
 dph_deaths_data <- dph_deaths_data %>%
-   mutate(`2020-12-25` = round(rowMeans(cbind(dph_deaths_data$`2020-12-24`, dph_deaths_data$`2020-12-26`)))) %>%
+   mutate(`2021-02-22` = round(rowMeans(cbind(dph_deaths_data$`2021-02-21`, dph_deaths_data$`2021-02-23`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
    
 
 
 dph_rate_data <- dph_rate_data %>%
-   mutate(`2020-12-25` = round(rowMeans(cbind(dph_rate_data$`2020-12-24`, dph_rate_data$`2020-12-26`)))) %>%
+   mutate(`2021-02-22` = round(rowMeans(cbind(dph_rate_data$`2021-02-21`, dph_rate_data$`2021-02-23`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
    
 
 
 dph_deaths_rate_data <- dph_deaths_rate_data %>%
-   mutate(`2020-12-25` = round(rowMeans(cbind(dph_deaths_rate_data$`2020-12-24`, dph_deaths_rate_data$`2020-12-26`)))) %>%
+   mutate(`2021-02-22` = round(rowMeans(cbind(dph_deaths_rate_data$`2021-02-21`, dph_deaths_rate_data$`2021-02-23`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
    
@@ -262,15 +262,15 @@ dph_deaths_rate_data <- dph_deaths_rate_data %>%
 
 
 dph_count_data <- dph_count_data %>%
-   rename(`2021-02-17` = `2021-02-18`)
+   rename(`2021-03-10` = `2021-03-11`)
 
 dph_rate_data <- dph_rate_data %>%
-   rename(`2021-02-17` = `2021-02-18`)
+   rename(`2021-03-10` = `2021-03-11`)
 
 dph_deaths_data <- dph_deaths_data %>%
-   rename(`2021-02-17` = `2021-02-18`)
+   rename(`2021-03-10` = `2021-03-11`)
 
 dph_deaths_rate_data <- dph_deaths_rate_data %>%
-   rename(`2021-02-17` = `2021-02-18`)
+   rename(`2021-03-10` = `2021-03-11`)
 
 
