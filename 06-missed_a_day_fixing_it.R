@@ -1,29 +1,26 @@
 dph_count_data <- dph_count_data %>%
-   mutate(`2021-02-22` = round(rowMeans(cbind(dph_count_data$`2021-02-21`, dph_count_data$`2021-02-23`)))) %>%
+   mutate(`2021-04-20` = round(rowMeans(cbind(dph_count_data$`2021-04-19`, dph_count_data$`2021-04-21`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
-   
 
 
 dph_deaths_data <- dph_deaths_data %>%
-   mutate(`2021-02-22` = round(rowMeans(cbind(dph_deaths_data$`2021-02-21`, dph_deaths_data$`2021-02-23`)))) %>%
+   mutate(`2021-04-20` = round(rowMeans(cbind(dph_deaths_data$`2021-04-19`, dph_deaths_data$`2021-04-21`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
-   
 
 
 dph_rate_data <- dph_rate_data %>%
-   mutate(`2021-02-22` = round(rowMeans(cbind(dph_rate_data$`2021-02-21`, dph_rate_data$`2021-02-23`)))) %>%
+   mutate(`2021-04-20` = round(rowMeans(cbind(dph_rate_data$`2021-04-19`, dph_rate_data$`2021-04-21`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
-   
 
 
 dph_deaths_rate_data <- dph_deaths_rate_data %>%
-   mutate(`2021-02-22` = round(rowMeans(cbind(dph_deaths_rate_data$`2021-02-21`, dph_deaths_rate_data$`2021-02-23`)))) %>%
+   mutate(`2021-04-20` = round(rowMeans(cbind(dph_deaths_rate_data$`2021-04-19`, dph_deaths_rate_data$`2021-04-21`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
-   
+
 
 
 
@@ -262,15 +259,32 @@ dph_deaths_rate_data <- dph_deaths_rate_data %>%
 
 
 dph_count_data <- dph_count_data %>%
-   rename(`2021-03-10` = `2021-03-11`)
+   rename(`2021-04-02` = `2021-04-03`)
 
 dph_rate_data <- dph_rate_data %>%
-   rename(`2021-03-10` = `2021-03-11`)
+   rename(`2021-04-02` = `2021-04-03`)
 
 dph_deaths_data <- dph_deaths_data %>%
-   rename(`2021-03-10` = `2021-03-11`)
+   rename(`2021-04-02` = `2021-04-03`)
 
 dph_deaths_rate_data <- dph_deaths_rate_data %>%
-   rename(`2021-03-10` = `2021-03-11`)
+   rename(`2021-04-02` = `2021-04-03`)
 
 
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# filling in gap using dashboard download data from the missing day
+
+missing_date <- "2021-04-20"
+
+missing_day_counts_rates <- readr::read_csv(paste("../daily_dashboard/data", missing_date, "LA_County_Covid19_CSA_case_death_table.csv", sep = "/")) %>%
+   dplyr::select(geo_merge, cases_final, case_rate_final, deaths_final, death_rate_final) %>%
+   dplyr::select(city_community = geo_merge,
+                 everything()) %>%
+   dplyr::filter(city_community != "Los Angeles County")
+
+# the dashboard download file is missing 4 areas that are included on the locations web site
+# - two are unincorporated areas with nonzero case counts
+# - two are cities that are listed separately on the web site (Pasadena and Long Beach)
+# the upshot is that pursing this solution will require somehow filling in those four gaps

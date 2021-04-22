@@ -331,7 +331,7 @@ lac_covid_long_csa_7day <- lac_covid_long_csa_7day %>% filter(!is.na(date))
 
 # UPPER_LIMIT_THRESHOLD reduced from 1500 to 1000 on 2020-02-02 to reflect lower case rates countywide
 # UPPER_LIMIT_THRESHOLD reduced from 1000 to 350 on 2020-02-16 to reflect lower case rates countywide
-UPPER_LIMIT_THRESHOLD <- 125
+UPPER_LIMIT_THRESHOLD <- 80
 
 lac_covid_long_csa_7day <- lac_covid_long_csa_7day %>%
    mutate(case_7day_rate = ifelse(is.na(case_7day_rate), 0, case_7day_rate)) %>%
@@ -497,3 +497,5 @@ rate_map_7day_change_smooth <-
 
 static_rate_map_7day_change_smooth <- la_county_topomap + rate_map_7day_change_smooth + map_styling
 static_rate_map_7day_change_smooth
+
+Sys.Date()
