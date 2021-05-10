@@ -7,7 +7,7 @@
 # first, double-check that dph_count_data and dph_rate_data are up to date through 'yesterday'
 # this gets run every day to do final prep for map-making
 
-source("03-lacounty_covid_analysis_data_download_v11.R")
+# source("03-lacounty_covid_analysis_data_download_v11.R")
 
 test_sum
 
