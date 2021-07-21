@@ -1,23 +1,23 @@
 dph_count_data <- dph_count_data %>%
-   mutate(`2021-05-08` = round(rowMeans(cbind(dph_count_data$`2021-05-07`, dph_count_data$`2021-05-09`)))) %>%
+   mutate(`2021-07-04` = round(rowMeans(cbind(dph_count_data$`2021-07-03`, dph_count_data$`2021-07-05`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
 
 
 dph_deaths_data <- dph_deaths_data %>%
-   mutate(`2021-05-08` = round(rowMeans(cbind(dph_deaths_data$`2021-05-07`, dph_deaths_data$`2021-05-09`)))) %>%
+   mutate(`2021-07-04` = round(rowMeans(cbind(dph_deaths_data$`2021-07-03`, dph_deaths_data$`2021-07-05`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
 
 
 dph_rate_data <- dph_rate_data %>%
-   mutate(`2021-05-08` = round(rowMeans(cbind(dph_rate_data$`2021-05-07`, dph_rate_data$`2021-05-09`)))) %>%
+   mutate(`2021-07-04` = round(rowMeans(cbind(dph_rate_data$`2021-07-03`, dph_rate_data$`2021-07-05`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
 
 
 dph_deaths_rate_data <- dph_deaths_rate_data %>%
-   mutate(`2021-05-08` = round(rowMeans(cbind(dph_deaths_rate_data$`2021-05-07`, dph_deaths_rate_data$`2021-05-09`)))) %>%
+   mutate(`2021-07-04` = round(rowMeans(cbind(dph_deaths_rate_data$`2021-07-03`, dph_deaths_rate_data$`2021-07-05`)))) %>%
    dplyr::select(sort(current_vars())) %>%
    dplyr::select(city_community, everything())
 
@@ -255,20 +255,20 @@ dph_deaths_rate_data <- dph_deaths_rate_data %>%
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
-# downloaded yesterday's data this morning, need to rename the columns
+# downloaded yesterday's data this morning, need to rename the columns ----
 
 
 dph_count_data <- dph_count_data %>%
-   rename(`2021-05-07` = `2021-05-08`)
+   rename(`2021-07-16` = `2021-07-17`)
 
 dph_rate_data <- dph_rate_data %>%
-   rename(`2021-05-07` = `2021-05-08`)
+   rename(`2021-07-16` = `2021-07-17`)
 
 dph_deaths_data <- dph_deaths_data %>%
-   rename(`2021-05-07` = `2021-05-08`)
+   rename(`2021-07-16` = `2021-07-17`)
 
 dph_deaths_rate_data <- dph_deaths_rate_data %>%
-   rename(`2021-05-07` = `2021-05-08`)
+   rename(`2021-07-16` = `2021-07-17`)
 
 
 # -----------------------------------------------------------------------------
