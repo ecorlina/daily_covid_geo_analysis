@@ -7,6 +7,9 @@
 # first, double-check that dph_count_data and dph_rate_data are up to date through 'yesterday'
 # this gets run every day to do final prep for map-making
 
+# just for reference, my benchmark estimate for the population of LA County is 10,257,557
+# DPH cites using "Population Data: 2018 Los Angeles County PEPs Data"
+
 # source("03-lacounty_covid_analysis_data_download_v11.R")
 
 test_sum
@@ -124,7 +127,7 @@ long_beach <- dph_count_data_long %>%
 ggplot(data = long_beach) +
    geom_col(mapping = aes(x = date, y = new_cases), fill = "#0099CC", show.legend = F) +
    geom_line(mapping  = aes(x = date, y = ma_7_day, group = 1), color = "#990000") +
-   scale_x_date(name = "Date", date_breaks = "4 weeks") +
+   scale_x_date(name = "Date", date_breaks = "8 weeks") +
    scale_y_continuous(name = "New cases (calculated from cumulative counts)") +
    labs(title = "Daily new case counts with 7-day moving average, Long Beach")
 
@@ -156,7 +159,7 @@ pasadena <- dph_count_data_long %>%
 ggplot(data = pasadena) +
    geom_col(mapping = aes(x = date, y = new_cases), fill = "#00CC33", show.legend = F) +
    geom_line(mapping  = aes(x = date, y = ma_7_day, group = 1), color = "#990000") +
-   scale_x_date(name = "Date", date_breaks = "4 weeks") +
+   scale_x_date(name = "Date", date_breaks = "8 weeks") +
    scale_y_continuous(name = "New cases (calculated from cumulative counts)") +
    labs(title = "Daily new case counts with 7-day moving average, Pasadena")
 
@@ -189,7 +192,7 @@ pomona <- dph_count_data_long %>%
 ggplot(data = pomona) +
    geom_col(mapping = aes(x = date, y = new_cases), fill = "#0099CC", show.legend = F) +
    geom_line(mapping  = aes(x = date, y = ma_7_day, group = 1), color = "#990000") +
-   scale_x_date(name = "Date", date_breaks = "4 weeks") +
+   scale_x_date(name = "Date", date_breaks = "8 weeks") +
    scale_y_continuous(name = "New cases (calculated from cumulative counts)") +
    labs(title = "Daily new case counts with 7-day moving average, Pomona")
 
@@ -261,6 +264,8 @@ dashboard_basemap_rates <-
            title = "Case Rate (per 100k)",
            group = str_c("COVID-19 case rate, ", latest_date)) +
    tm_borders(lwd = 0.2)
+
+# st_crs(dashboard_basemap_rates) <- 4326
 
 
 # quantiles rate map for dashboard ----
@@ -372,7 +377,10 @@ lac_covid_long_csa_7day <- lac_covid_long_csa_7day %>% filter(!is.na(date))
 # UPPER_LIMIT_THRESHOLD reduced from 80 to 65 on 2020-05-15 to reflect lower case rates countywide
 # UPPER_LIMIT_THRESHOLD reduced from 65 to 60 on 2020-05-29 to reflect lower case rates countywide
 # UPPER_LIMIT_THRESHOLD _increased_ from 60 to 100 on 2020-07-14 to better focus on hotspots
-UPPER_LIMIT_THRESHOLD <- 160
+# UPPER_LIMIT_THRESHOLD _increased_ from 100 to 160 on 2020-07-21 to better focus on hotspots
+# UPPER_LIMIT_THRESHOLD _increased_ from 160 to 200 on 2020-07-29 to better focus on hotspots
+# UPPER_LIMIT_THRESHOLD _increased_ from 200 to 250 on 2020-08-12 to better focus on hotspots
+UPPER_LIMIT_THRESHOLD <- 250
 
 lac_covid_long_csa_7day_limited <- lac_covid_long_csa_7day %>%
    mutate(case_7day_rate = ifelse(is.na(case_7day_rate), 0, case_7day_rate)) %>%
@@ -384,6 +392,7 @@ dashboard_basemap_rates_7day_smooth <-
            style = "cont",
            id = "label",
            title = "7-day Case Rate (per 100k)",
+           popup.vars = c("city", "case_7day_rate", "population"),
            group = str_c("COVID-19 7-day case rate, ", latest_date)) +
    tm_borders(lwd = 0.2)
 
@@ -422,15 +431,20 @@ tmap_save(static_rate_map_7day_smooth, filename = str_c(paste0("../covid_analysi
 tmap_save(static_rate_map_7day_smooth, filename = str_c(paste0("../covid_analysis_output/dashboard_output/other_maps/rates_map_7day_smooth-", data_date_7day_map,".png")), width = 6.5, height = NA, dpi = 150, units = "in")
 
 
+# tmap_mode("view")
+# rate_map_7day_smooth
+# tmap_mode("plot")
+# 
 # interactive
-tmap_leaflet(
-   rate_map_7day_smooth,
-   mode = "view"
-)
+# tmap_leaflet(
+#    rate_map_7day_smooth,
+#    mode = "view"
+# )
+
 
 
 lac_covid_long_csa_7day_for_dashbard_table <- lac_covid_long_csa_7day %>%
-   dplyr::select(c(label, case_7day_rate, population, date)) %>%
+   dplyr::select(label, case_7day_rate, population, date) %>%
    st_drop_geometry()
 
 write_rds(lac_covid_long_csa_7day_for_dashbard_table, "../daily_dashboard/lac_covid_long_csa_7day_for_dashbard_table.rds")

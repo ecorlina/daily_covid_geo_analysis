@@ -18,6 +18,7 @@ library(tmaptools)  # for access to read_osm function for basemaps
 library(rJava)
 library(OpenStreetMap)
 library(rmapshaper)
+library(leaflet)
 
 
 # define functions ----
@@ -74,14 +75,24 @@ csa_map <- read_sf("./data/gis_data/Community Boundaries (CSA)") %>%
 # this geo file came from LA Times data division github
 # main benefit is that it uses simplified CSA borders, which results in smaller map files
 # going forward, this is the preferred object for mapping DPH Covid-19 city/community data
-csa_map_simplified <- read_sf("./data/gis_data/los-angeles-countywide-statistical-areas.json") %>%
-   arrange(label)
+# csa_map_simplified <- read_sf("./data/gis_data/los-angeles-countywide-statistical-areas.json") %>%
+#    arrange(label)
 
+csa_map_simplified <- read_sf("./data/gis_data/Community Boundaries (CSA).geojson") %>%
+   sf::st_make_valid() %>%
+   arrange(label) %>%
+   mutate(across(c(objectid), as.numeric))
+
+csa_map_simplified  %>%
+   tm_shape() + tm_borders()
 
 # SUPERVISORIAL DISTRICTS
 csa_by_supdist_map_v0 <- read_sf("./data/gis_data/Community Boundaries (CSA) w SupDists") %>%
    arrange(label, supdist) %>%
-   dplyr::select(label, supdist, everything())
+   dplyr::select(label, supdist, everything()) %>%
+   sf::st_make_valid()
+# st_make_valid step on previous line added on 2021-07-26 to fix an error
+# suggested solution per https://www.gitmemory.com/issue/MatMatt/MODIS/110/853327591
 
 csa_area_totals <- csa_by_supdist_map_v0 %>%
    group_by(label) %>%
@@ -150,7 +161,7 @@ setdiff(csa_map$label, csa_map_simplified$label)
 
 # on 2020-08-05, after updating R and the dplyr package, the rename command started to return an error
 # for now, the second half of the above command is removed and commented out here
-# because this map it isn't actually used anymore
+# because with this map it isn't actually used anymore
 # if you do need this later, just use the original variable name: "Total"
 # ndsc_map %>% dplyr::rename(population = Total)
 
@@ -228,7 +239,7 @@ homeless_locations <- read_xlsx("./data/dph_homeless_shelter_locations.xlsx",
 
 # import DPH city/community Covid-19 data from 2020-07-01, but just for their population numbers
 
-csa_pops <- read_csv("./data/city_community_table.csv") %>%
+csa_pops <- read_csv("./data/city_community_table_20210701.csv", show_col_types = F) %>%
    dplyr::select(geo_merge, population)
 
 csa_map_pops <- left_join(csa_map_simplified, csa_pops, by = c("label" = "geo_merge")) %>%
@@ -277,6 +288,7 @@ dph_deaths_data <- read_rds("./data/dph_deaths_data.rds")
 dph_rate_data <- read_rds("./data/dph_rate_data.rds")
 dph_deaths_rate_data <- read_rds("./data/dph_deaths_rate_data.rds")
 neighborhoods_crosswalk <- read_rds("./data/neighborhoods_crosswalk.rds")  # you won't need this much longer!
-dph_shelter_tbl <- read_rds("./data/dph_shelter_tbl.rds")
+# dph_shelter_tbl <- read_rds("./data/dph_shelter_tbl.rds")
 
 setdiff(dph_count_data$city_community, csa_map$label)
+

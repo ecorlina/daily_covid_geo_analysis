@@ -259,16 +259,16 @@ dph_deaths_rate_data <- dph_deaths_rate_data %>%
 
 
 dph_count_data <- dph_count_data %>%
-   rename(`2021-07-16` = `2021-07-17`)
+   rename(`2021-09-29` = `2021-09-30`)
 
 dph_rate_data <- dph_rate_data %>%
-   rename(`2021-07-16` = `2021-07-17`)
+   rename(`2021-09-29` = `2021-09-30`)
 
 dph_deaths_data <- dph_deaths_data %>%
-   rename(`2021-07-16` = `2021-07-17`)
+   rename(`2021-09-29` = `2021-09-30`)
 
 dph_deaths_rate_data <- dph_deaths_rate_data %>%
-   rename(`2021-07-16` = `2021-07-17`)
+   rename(`2021-09-29` = `2021-09-30`)
 
 
 # -----------------------------------------------------------------------------

@@ -169,7 +169,7 @@ folders_there <- list.files("../daily_dashboard/data") %>%
 datatable_to_use <- last(folders_there)
 # datatable_to_use <- "2020-12-05"
 
-wk_tot_case_rate_csa_all <- readr::read_csv(paste("../daily_dashboard/data", datatable_to_use, "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
+wk_tot_case_rate_csa_all <- readr::read_csv(paste("../daily_dashboard/data", datatable_to_use, "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/"), show_col_types = F) %>%
    dplyr::select(ep_date, geo_merge, case_7day_rate) %>%
    mutate(ep_date = as_date(ep_date))
 
@@ -269,14 +269,14 @@ ggsave(filename = str_c("../covid_analysis_output/geo_analysis_output/output_mai
 
 folders_there
 
-case_rate_7day_now <- readr::read_csv(paste("../daily_dashboard/data", folders_there[length(folders_there)], "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
+case_rate_7day_now <- readr::read_csv(paste("../daily_dashboard/data", folders_there[length(folders_there)], "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/"), show_col_types = F) %>%
    dplyr::select(ep_date, geo_merge, case_7day_rate) %>%
    mutate(ep_date = as_date(ep_date)) %>%
    dplyr::filter(ep_date == ep_date[1]) %>%
    dplyr::select(city_community = geo_merge,
                  latest_rate = case_7day_rate)
 
-case_rate_7day_weekago <- readr::read_csv(paste("../daily_dashboard/data", folders_there[length(folders_there) - 8], "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
+case_rate_7day_weekago <- readr::read_csv(paste("../daily_dashboard/data", folders_there[length(folders_there) - 8], "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/"), show_col_types = F) %>%
    dplyr::select(ep_date, geo_merge, case_7day_rate) %>%
    mutate(ep_date = as_date(ep_date)) %>%
    dplyr::filter(ep_date == ep_date[1]) %>%
@@ -296,7 +296,7 @@ folders_there <- list.files("../daily_dashboard/data") %>%
 datatable_to_use <- last(folders_there)
 # datatable_to_use <- "2020-12-05"
 
-wk_tot_cases_csa <- readr::read_csv(paste("../daily_dashboard/data", datatable_to_use, "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/")) %>%
+wk_tot_cases_csa <- readr::read_csv(paste("../daily_dashboard/data", datatable_to_use, "LA_County_Covid19_CSA_7day_case_death_table.csv", sep = "/"), show_col_types = F) %>%
    dplyr::select(ep_date, geo_merge, cases_7day)
 
 csa_by_supdist <- csa_by_supdist_map_pops %>%

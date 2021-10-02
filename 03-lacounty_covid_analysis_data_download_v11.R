@@ -103,6 +103,8 @@ if (sum(test$change, na.rm = T) != 0) {
 }
 
 
+# START HERE if you need everything but the actual website data import ----
+
 # compute quantiles ----
 
 # for manual autoscaling as the counts grow

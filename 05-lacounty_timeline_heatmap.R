@@ -78,6 +78,7 @@ heatmap$max_adj_case_prop <- heatmap$adj_case_7day_rate / heatmap$max_adj_case_r
 
 plot_from <- "2020-03-01"
 plot_to <- max(heatmap$ep_date)
+# plot_from <- plot_to - 180
 
 
 casetiles <- ggplot(heatmap,
