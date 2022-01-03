@@ -38,7 +38,7 @@ rate_map_7day_smooth_briskin <-
    tm_shape(briskin_location) + 
    tm_symbols(
       size = 0.1, shape.showNA = F,
-      col = "#000099",
+      col = "#3399FF",
       alpha = 0.75,
       border.lwd = 0.5, border.col = "black", border.alpha = 0.5,
       id = "site",

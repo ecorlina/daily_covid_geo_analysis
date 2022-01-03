@@ -156,8 +156,8 @@ ggsave(filename = str_c("../covid_analysis_output/geo_analysis_output/output_mai
 
 # 7-DAY TOTAL NEW cases rates ----
 
-# I sadly and embarassingly just figured out that the table used for this analysis does NOT report the 7-day average case rate,
-# It reports what it says it reports the 7-day case rate, i.e., the 7-day *total* case rate.
+# I sadly and embarrassingly just figured out that the table used for this analysis does NOT report the 7-day average case rate,
+# It reports what it says is the 7-day case rate, i.e., the 7-day *total* case rate.
 # Column "cases_7day" gives the total number of cases in a community for the 7-day period ending on a given row's "ep_date".
 # Column "cases_7day_rate" is that total number divded by that community's population times 100k.
 # It's the total case rate for the seven-days ending on that row's ep_date.

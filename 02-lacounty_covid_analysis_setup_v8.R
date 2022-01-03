@@ -9,6 +9,7 @@ library(hablar)
 library(janitor)
 library(busdater)
 library(khroma)
+library(glue)
 
 library(rgdal)
 library(sf)
@@ -19,6 +20,9 @@ library(rJava)
 library(OpenStreetMap)
 library(rmapshaper)
 library(leaflet)
+library(leaflet.extras)
+library(leaflet.extras2)
+library(htmlwidgets)
 
 
 # define functions ----
@@ -212,6 +216,7 @@ voala_programs_filtered <- voala_programs_subset %>%
 # convert the tibble into a geometry object
 voala_locations <- st_as_sf(voala_programs_filtered, coords = c("Longitude", "Latitude"), crs = 4326)
 # Note that the CRS choice comes from examining the CRS from several of the geojson and kml files downloaded from geohub.lacity.org
+
 
 unique(voala_locations$BudgetCat)
 
